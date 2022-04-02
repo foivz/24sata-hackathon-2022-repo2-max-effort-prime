@@ -7,8 +7,18 @@ const userSchema = new Schema({
   phoneNumber: {
     type: String,
     unique: true,
+    sparse: true,
   },
   password: String,
+  budget: Number,
+  createdAt: Date,
+  modifiedAt: Date,
+});
+
+userSchema.pre("save", function (next) {
+  this.createdAt = Date.now();
+  this.modifiedAt = Date.now();
+  next();
 });
 
 export default mongoose.model("User", userSchema);
