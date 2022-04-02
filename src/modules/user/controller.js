@@ -74,3 +74,13 @@ export const updateUser = async (req, res) => {
     return res.status(500).json({ message, success: false });
   }
 };
+
+export const fetchAllUsers = async (req, res) => {
+  try {
+    const users = await User.find();
+
+    return res.status(200).json({ data: users, success: true });
+  } catch ({ message }) {
+    return res.status(500).json({ message, success: false });
+  }
+};

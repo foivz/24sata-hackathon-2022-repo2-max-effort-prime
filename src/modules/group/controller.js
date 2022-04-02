@@ -127,7 +127,7 @@ export const deleteGroupMemeber = async (req, res) => {
     }
 
     group.members = group.members.filter(
-      (member) => member._id.toString() != memberId
+      (member) => member._id.toString() !== memberId
     );
 
     await Group.updateOne(
