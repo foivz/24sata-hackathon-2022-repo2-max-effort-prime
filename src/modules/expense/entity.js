@@ -34,4 +34,8 @@ expenseSchema.pre("updateOne", function (next) {
   next();
 });
 
+expenseSchema.statics.findAllByUserId = function (userId) {
+  return this.where({ user: userId });
+};
+
 export default mongoose.model("Expense", expenseSchema);
