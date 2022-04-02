@@ -5,6 +5,7 @@ import {
   fetchExpensesByUserId,
   fetchExpenseItemsByExpenseId,
   assignExpenseToGroup,
+  addItemToExpense,
 } from "./controller.js";
 
 const expenseRouter = express.Router();
@@ -15,6 +16,7 @@ expenseRouter.get(
   "/api/expenses/:expenseId/items",
   fetchExpenseItemsByExpenseId
 );
+expenseRouter.put("/api/expenses/:expenseId/items", addItemToExpense);
 expenseRouter.put(
   "/api/expenses/:expenseId/groups/:groupId",
   assignExpenseToGroup

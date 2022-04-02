@@ -49,8 +49,6 @@ export const deleteRegularShoppingListItem = async (req, res) => {
         .json({ message: "Users shopping list is empty", success: false });
     }
 
-    console.log(shoppingList);
-
     const isItemAddedToUserShoppingList = shoppingList.items
       .map((shoppingListItem) => shoppingListItem.item._id.toString())
       .some((item) => item === itemId);
