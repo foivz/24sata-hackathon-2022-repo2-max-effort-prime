@@ -53,9 +53,11 @@ export const fetchExpenseItemsByExpenseId = async (req, res) => {
     }
 
     const data = expense.items.map((expenseItem) => ({
-      _id: expenseItem._id,
+      _id: expenseItem.item._id.toString(),
       name: expenseItem.item.name,
+      imageUrl: expenseItem.item.imageUrl,
       quantity: expenseItem.quantity,
+      price: expenseItem.price,
     }));
 
     return res.status(200).json({ data, success: true });
