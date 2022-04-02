@@ -14,9 +14,4 @@ itemSchema.pre("save", function (next) {
   next();
 });
 
-itemSchema.pre("updateOne", function (next) {
-  this.updatedAt = Date.now();
-  next();
-});
-
 export default mongoose.model("Item", itemSchema);

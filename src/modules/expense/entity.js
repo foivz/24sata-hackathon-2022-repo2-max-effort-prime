@@ -31,11 +31,6 @@ expenseSchema.pre("save", function (next) {
   next();
 });
 
-expenseSchema.pre("updateOne", function (next) {
-  this.modifiedAt = Date.now();
-  next();
-});
-
 expenseSchema.statics.findAllByUserId = function (userId) {
   return this.where({ user: userId });
 };
