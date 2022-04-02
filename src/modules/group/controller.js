@@ -104,3 +104,42 @@ export const fetchGroup = async (req, res) => {
     return res.status(500).json({ message, success: false });
   }
 };
+
+export const deleteGroupMemeber = async (req, res) => {
+  const { groupId, memberId } = req.params;
+
+  try {
+    const group = await Group.findById(groupId).populate("members");
+    if (!group) {
+      return res
+        .status(404)
+        .json({ message: "Group not found", success: false });
+    }
+
+    const isUserGroupMember = group.members
+      .map((member) => member._id.toString())
+      .some((member) => member === memberId);
+
+    if (!isUserGroupMember) {
+      return res
+        .status(404)
+        .json({ message: "User is not group member", success: false });
+    }
+
+    group.members = group.members.filter(
+      (member) => member._id.toString() != memberId
+    );
+
+    await Group.updateOne(
+      { groupId },
+      {
+        members: [...group.members],
+        modifiedAt: Date.now(),
+      }
+    );
+
+    return res.status(200).json({ success: true });
+  } catch ({ message }) {
+    return res.status(500).json({ message, success: false });
+  }
+};
