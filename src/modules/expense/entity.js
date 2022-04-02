@@ -17,6 +17,10 @@ const expenseSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
+  group: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Group",
+  },
   createdAt: Date,
   modifiedAt: Date,
 });

@@ -1,4 +1,5 @@
 import Expense from "./entity.js";
+import Group from "../group/entity.js";
 
 export const createExpense = async (req, res) => {
   const { userId } = req.params;
@@ -57,6 +58,34 @@ export const fetchExpenseItemsByExpenseId = async (req, res) => {
     }));
 
     return res.status(200).json({ data, success: true });
+  } catch ({ message }) {
+    return res.status(500).json({ message, success: false });
+  }
+};
+
+export const assignExpenseToGroup = async (req, res) => {
+  const { expenseId, groupId } = req.params;
+
+  try {
+    const expense = await Expense.findOne({ _id: expenseId });
+    if (!expense) {
+      return res
+        .status(404)
+        .json({ message: "Expense not found", success: false });
+    }
+
+    const group = await Group.findOne({ _id: groupId });
+    if (!group) {
+      return res
+        .status(404)
+        .json({ message: "Group not found", success: false });
+    }
+
+    expense.group = groupId;
+
+    const updatedExpense = await expense.save();
+
+    return res.status(200).json({ data: updatedExpense, success: true });
   } catch ({ message }) {
     return res.status(500).json({ message, success: false });
   }
