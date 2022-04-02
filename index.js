@@ -5,6 +5,7 @@ import userRouter from "./src/modules/user/routes.js";
 import itemRouter from "./src/modules/item/routes.js";
 import expenseRouter from "./src/modules/expense/routes.js";
 import groupRouter from "./src/modules/group/routes.js";
+import shoppingListRoutes from "./src/modules/shopping-list/routes.js";
 
 const app = express();
 
@@ -22,5 +23,6 @@ app.use(userRouter);
 app.use(itemRouter);
 app.use(expenseRouter);
 app.use(groupRouter);
+app.use(shoppingListRoutes);
 
 app.listen(PORT, () => console.log("Express server started"));
