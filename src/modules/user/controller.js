@@ -6,7 +6,8 @@ export const register = async (req, res) => {
   const { phoneNumber, password } = req.body;
 
   try {
-    const user = User.findOne({ phoneNumber });
+    const user = await User.findOne({ phoneNumber });
+
     if (user) {
       return res.status(400).json({
         message: `User with phone number ${phoneNumber} is already registered!`,
