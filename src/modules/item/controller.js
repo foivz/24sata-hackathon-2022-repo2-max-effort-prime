@@ -41,7 +41,8 @@ export const getItemByQuery = async (req, res) => {
           const shoppingListItem = usersShoppingList.items
             .map((shoppingListItem) => ({
               quantity: shoppingListItem.quantity,
-              _id: shoppingListItem.item._id.toString(),
+              _id: shoppingListItem._id.toString(),
+              id: shoppingListItem.item._id.toString(),
             }))
             .find((shoppingListItem) => shoppingListItem._id === item._id);
 
