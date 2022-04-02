@@ -42,10 +42,10 @@ export const login = async (req, res) => {
     if (!passwordMatch) {
       return res
         .status(401)
-        .json({ success: false, message: "Invalid email or password!" });
+        .json({ message: "Invalid email or password!", success: false });
     }
 
-    return res.status(200).json({ data: user._id, success: true });
+    return res.status(200).json({ data: user, success: true });
   } catch ({ message }) {
     return res.status(500).json({ message, success: false });
   }
