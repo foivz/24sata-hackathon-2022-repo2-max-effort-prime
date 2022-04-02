@@ -3,14 +3,14 @@ const { Schema } = mongoose;
 
 const itemSchema = new Schema({
   name: String,
-  price: mongoose.Types.Decimal128,
+  price: Number,
   createdAt: Date,
-  updatedAt: Date,
+  modifiedAt: Date,
 });
 
 itemSchema.pre("save", function (next) {
   this.createdAt = Date.now();
-  this.updatedAt = Date.now();
+  this.modifiedAt = Date.now();
   next();
 });
 

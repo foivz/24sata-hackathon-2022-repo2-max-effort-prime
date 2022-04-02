@@ -9,19 +9,21 @@ const expenseSchema = new Schema({
         ref: "Item",
       },
       quantity: Number,
-      price: mongoose.Schema.Types.Decimal128,
+      price: Number,
     },
   ],
-  amount: mongoose.Types.Decimal128,
+  amount: Number,
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
   },
   createdAt: Date,
-  updatedAt: Date,
+  modifiedAt: Date,
 });
 
 expenseSchema.pre("save", function (next) {
+  this.createdAt = Date.now();
+  this.modifiedAt = Date.now();
   this.amount = this.items.reduce(
     (currentTotal, item) => currentTotal + item.quantity * item.price,
     0
@@ -30,7 +32,7 @@ expenseSchema.pre("save", function (next) {
 });
 
 expenseSchema.pre("updateOne", function (next) {
-  this.updatedAt = Date.now();
+  this.modifiedAt = Date.now();
   next();
 });
 
