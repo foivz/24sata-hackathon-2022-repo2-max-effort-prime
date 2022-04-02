@@ -41,7 +41,14 @@ export const fetchExpenseItemsByExpenseId = async (req, res) => {
   const { expenseId } = req.params;
 
   try {
-    const expense = await Expense.findById(expenseId).populate("items.item");
+    const expense = await Expense.findOne({ _id: expenseId }).populate(
+      "items.item"
+    );
+    if (!expense) {
+      return res
+        .status(404)
+        .json({ message: "Expense not found", success: false });
+    }
 
     const data = expense.items.map((expenseItem) => ({
       _id: expenseItem._id,
