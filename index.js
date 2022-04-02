@@ -7,6 +7,8 @@ const app = express();
 
 app.use(express.json());
 
+const PORT = process.env.PORT || 3000;
+
 mongoose
   .connect(
     "mongodb+srv://max-effort-prime:GXXMdfQRKXvEE9PP@cluster0.wizet.mongodb.net/24sata-hackathon?retryWrites=true&w=majority"
@@ -15,4 +17,4 @@ mongoose
 
 app.use(userRouter);
 
-app.listen(3000, () => console.log("Express server started"));
+app.listen(PORT, () => console.log("Express server started"));
