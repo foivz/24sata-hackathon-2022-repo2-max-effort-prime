@@ -29,7 +29,7 @@ shoppingListSchema.pre("save", function (next) {
 });
 
 shoppingListSchema.statics.findByUserId = function (userId) {
-  return this.where({ user: userId });
+  return this.findOne({ user: userId });
 };
 
 export default mongoose.model("ShoppingList", shoppingListSchema);
