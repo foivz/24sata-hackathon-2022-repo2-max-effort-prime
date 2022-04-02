@@ -10,7 +10,7 @@ const userSchema = new Schema({
     sparse: true,
   },
   password: String,
-  budget: Number,
+  monthlyBudget: Number,
   createdAt: Date,
   modifiedAt: Date,
 });
