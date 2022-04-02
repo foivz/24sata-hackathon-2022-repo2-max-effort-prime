@@ -39,4 +39,8 @@ expenseSchema.statics.findAllByUserId = function (userId) {
   return this.where({ user: userId });
 };
 
+expenseSchema.statics.findAllByGroupId = function (groupId) {
+  return this.where({ group: groupId });
+};
+
 export default mongoose.model("Expense", expenseSchema);

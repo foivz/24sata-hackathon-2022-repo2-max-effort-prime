@@ -1,5 +1,5 @@
-import { group } from "console";
 import Group from "./entity.js";
+import Expense from "../expense/entity.js";
 
 export const createGroup = async (req, res) => {
   try {
@@ -96,8 +96,18 @@ export const fetchGroup = async (req, res) => {
         .json({ message: "Group not found", success: false });
     }
 
+    const currentGroupExpenses = await calculateGroupCurrentMonthExpenses(
+      groupId
+    );
+
     return res.status(200).json({
-      data: group,
+      data: {
+        _id: group._id,
+        name: group.name,
+        members: [...group.members],
+        currentGroupExpenses,
+        monthlyBudget: group.monthlyBudget,
+      },
       success: true,
     });
   } catch ({ message }) {
@@ -161,4 +171,19 @@ export const updateGroup = async (req, res) => {
   } catch ({ message }) {
     return res.status(500).json({ message, success: false });
   }
+};
+
+export const calculateGroupCurrentMonthExpenses = async (groupId) => {
+  const now = new Date();
+
+  const groupExpenses = await Expense.findAllByGroupId(groupId);
+
+  return groupExpenses
+    .filter(
+      (groupExpense) =>
+        groupExpense.createdAt.getDate() < now.getDate() &&
+        groupExpense.createdAt.getMonth() === now.getMonth()
+    )
+    .flatMap((expense) => ({ amount: expense.amount }))
+    .reduce((currentTotal, item) => currentTotal + item.amount, 0);
 };
