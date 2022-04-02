@@ -50,8 +50,6 @@ export const fetchGroupsByUserId = async (req, res) => {
   try {
     const groups = await Group.find().populate("members");
 
-    console.log("MEMBERS: ", groups);
-
     const userGroups = groups.filter((group) => {
       return group.members
         .map((member) => member._id.toString())
@@ -60,6 +58,46 @@ export const fetchGroupsByUserId = async (req, res) => {
 
     return res.status(200).json({
       data: userGroups,
+      success: true,
+    });
+  } catch ({ message }) {
+    return res.status(500).json({ message, success: false });
+  }
+};
+
+export const fetchGroupMembers = async (req, res) => {
+  const { groupId } = req.params;
+
+  try {
+    const group = await Group.findById(groupId).populate("members");
+    if (!group) {
+      return res
+        .status(404)
+        .json({ message: "Group not found", success: false });
+    }
+
+    return res.status(200).json({
+      data: group.members,
+      success: true,
+    });
+  } catch ({ message }) {
+    return res.status(500).json({ message, success: false });
+  }
+};
+
+export const fetchGroup = async (req, res) => {
+  const { groupId } = req.params;
+
+  try {
+    const group = await Group.findById(groupId).populate("members");
+    if (!group) {
+      return res
+        .status(404)
+        .json({ message: "Group not found", success: false });
+    }
+
+    return res.status(200).json({
+      data: group,
       success: true,
     });
   } catch ({ message }) {
