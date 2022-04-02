@@ -7,6 +7,7 @@ import {
   fetchGroupMembers,
   deleteGroupMemeber,
   fetchGroup,
+  updateGroup,
 } from "./controller.js";
 
 const groupRouter = express.Router();
@@ -20,5 +21,6 @@ groupRouter.delete(
   deleteGroupMemeber
 );
 groupRouter.get("/api/groups/:groupId", fetchGroup);
+groupRouter.put("/api/groups/:groupId", updateGroup);
 
 export default groupRouter;

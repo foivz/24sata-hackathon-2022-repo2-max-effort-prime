@@ -143,3 +143,22 @@ export const deleteGroupMemeber = async (req, res) => {
     return res.status(500).json({ message, success: false });
   }
 };
+
+export const updateGroup = async (req, res) => {
+  const { groupId } = req.params;
+
+  try {
+    const group = await Group.findOne({ _id: groupId });
+    if (!group) {
+      return res
+        .status(404)
+        .json({ message: "Group not found", success: false });
+    }
+
+    await Group.updateOne({ groupId }, { ...req.body, modifiedAt: Date.now() });
+
+    return res.status(200).json({ success: true });
+  } catch ({ message }) {
+    return res.status(500).json({ message, success: false });
+  }
+};
