@@ -69,9 +69,11 @@ export const updateUser = async (req, res) => {
         .json({ message: "User not found", success: false });
     }
 
-    const { phoneNumber, ...rest } = req.body;
-
-    await User.updateOne({ userId }, { ...rest, modifiedAt: Date.now() });
+    await User.findByIdAndUpdate(
+      userId,
+      { monthlyBudget: req.body.monthlyBudget, modifiedAt: Date.now() },
+      { $set: true }
+    );
 
     return res.status(200).json({ success: true });
   } catch ({ message }) {
