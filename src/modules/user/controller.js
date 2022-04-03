@@ -121,7 +121,9 @@ export const fetchDashboardDataByUserId = async (req, res) => {
         .json({ message: "User not found", success: false });
     }
 
-    let graphData = await Expense.aggregate([
+    let graphData = [];
+
+    const data1 = await Expense.aggregate([
       {
         $match: {
           createdAt: {
@@ -134,49 +136,61 @@ export const fetchDashboardDataByUserId = async (req, res) => {
       { $group: { _id: null, amount: { $sum: "$amount" } } },
     ]);
 
-    graphData[0].month = previousMonthBeggining.month();
-    graphData[0].amount = graphData[0].amount ? graphData[0].amount : 0;
+    data1.length === 0
+      ? graphData.push({
+          month: previousMonthBeggining.month(),
+          amount: 0,
+        })
+      : graphData.push({
+          month: previousMonthBeggining.month(),
+          amount: data1.amount,
+        });
 
-    graphData.push(
-      await Expense.aggregate([
-        {
-          $match: {
-            createdAt: {
-              $gte: previousMonthBeggining2.toDate(),
-              $lte: previousMonthEnding2.toDate(),
-            },
-            user: ObjectId(userId),
+    const data2 = await Expense.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: previousMonthBeggining2.toDate(),
+            $lte: previousMonthEnding2.toDate(),
           },
+          user: ObjectId(userId),
         },
-        { $group: { _id: null, amount: { $sum: "$amount" } } },
-      ])
-    );
+      },
+      { $group: { _id: null, amount: { $sum: "$amount" } } },
+    ]);
 
-    graphData[1].month = previousMonthBeggining2.month();
-    graphData[1].amount = graphData[1].amount ? graphData[1].amount : 0;
+    data2.length === 0
+      ? graphData.push({
+          month: previousMonthBeggining2.month(),
+          amount: 0,
+        })
+      : graphData.push({
+          month: previousMonthBeggining2.month(),
+          amount: data2.amount,
+        });
 
-    graphData.push(
-      await Expense.aggregate([
-        {
-          $match: {
-            createdAt: {
-              $gte: previousMonthBeggining3.toDate(),
-              $lte: previousMonthEnding3.toDate(),
-            },
-            user: ObjectId(userId),
+    const data3 = await Expense.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: previousMonthBeggining3.toDate(),
+            $lte: previousMonthEnding3.toDate(),
           },
+          user: ObjectId(userId),
         },
-        { $group: { _id: null, amount: { $sum: "$amount" } } },
-      ])
-    );
+      },
+      { $group: { _id: null, amount: { $sum: "$amount" } } },
+    ]);
 
-    graphData[2].month = previousMonthBeggining3.month();
-    graphData[2].amount = graphData[2].amount ? graphData[2].amount : 0;
-
-    graphData = graphData.map((data) => ({
-      month: data.month,
-      amount: data.amount,
-    }));
+    data3.length === 0
+      ? graphData.push({
+          month: previousMonthBeggining3.month(),
+          amount: 0,
+        })
+      : graphData.push({
+          month: previousMonthBeggining3.month(),
+          amount: data3.amount,
+        });
 
     graphData = graphData.sort((a, b) =>
       a.month < b.month ? -1 : a.month === b.month ? 0 : 1
