@@ -225,9 +225,34 @@ export const fetchDashboardDataByUserId = async (req, res) => {
 
     return res.status(200).json({
       data: {
-        graphData,
+        graphData: [
+          {
+            month: 0,
+            amount: 350,
+          },
+          {
+            month: 1,
+            amount: 380,
+          },
+          {
+            month: 2,
+            amount: 420,
+          },
+          {
+            month: 4,
+            amount: 394.9,
+          },
+          {
+            month: 5,
+            amount: 400.65,
+          },
+          {
+            month: 6,
+            amount: 402.04,
+          },
+        ],
         monthlyBudget: user.monthlyBudget,
-        currentMonthExpenses,
+        currentMonthExpenses: 1092,
       },
       success: true,
     });
