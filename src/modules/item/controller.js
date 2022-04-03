@@ -27,17 +27,17 @@ export const getItemByQuery = async (req, res) => {
       .filter((item) => item.name.toLowerCase().includes(phrase.toLowerCase()))
       .map((item) => ({ ...item, _id: item._id.toString() }));
 
-    const usersShoppingListItemsIds = usersShoppingList.items.map(
+    const usersShoppingListItemsIds = usersShoppingList?.items.map(
       (usersShoppingListItem) => {
         return usersShoppingListItem.item._id.toString();
       }
     );
 
-    if (usersShoppingList.items.length === 0) {
+    if (usersShoppingList?.items.length === 0) {
       filteredItems = filteredItems.map((item) => ({ ...item, quantity: 1 }));
     } else {
       filteredItems = filteredItems.map((item) => {
-        if (usersShoppingListItemsIds.includes(item._id)) {
+        if (usersShoppingListItemsIds?.includes(item._id)) {
           const shoppingListItem = usersShoppingList.items
             .map((shoppingListItem) => ({
               quantity: shoppingListItem.quantity,
