@@ -25,7 +25,7 @@ export const addItemToRegularList = async (req, res) => {
 
       updatedShoppingList = await newShoppingList.save();
     } else {
-      shoppingList.items = [...req.body.items];
+      shoppingList.items = [...shoppingList.items, ...req.body.items];
 
       updatedShoppingList = await shoppingList.save();
     }
