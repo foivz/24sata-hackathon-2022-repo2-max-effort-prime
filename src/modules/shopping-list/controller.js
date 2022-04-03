@@ -91,6 +91,16 @@ export const fetchRegularShoppingListByUserId = async (req, res) => {
 
     let shoppingListItems = [];
 
+    if (shoppingList === null)
+      return res.status(200).json({
+        data: {
+          _id: null,
+          type: ShoppingListTypes.REGULAR,
+          items: [],
+        },
+        success: true,
+      });
+
     for (let i = 0; i < shoppingList.items.length; i++) {
       const buyedQuantity = await numberOfBuyedItems(
         userId,
