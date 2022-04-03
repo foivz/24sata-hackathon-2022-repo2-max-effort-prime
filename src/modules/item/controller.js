@@ -44,7 +44,7 @@ export const getItemByQuery = async (req, res) => {
               _id: shoppingListItem._id.toString(),
               id: shoppingListItem.item._id.toString(),
             }))
-            .find((shoppingListItem) => shoppingListItem._id === item._id);
+            .find((shoppingListItem) => shoppingListItem.id === item._id);
 
           return {
             ...item,

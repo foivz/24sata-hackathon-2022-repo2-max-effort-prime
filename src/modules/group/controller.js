@@ -62,8 +62,6 @@ export const fetchGroupsByUserId = async (req, res) => {
           groups[i]
         );
 
-        console.log("TEST: ", currentGroupExpenses);
-
         userGroups.push({
           _id: groups[i]._id,
           name: groups[i].name,
@@ -73,8 +71,6 @@ export const fetchGroupsByUserId = async (req, res) => {
         });
       }
     }
-
-    console.log("USER GROUPS: ", userGroups);
 
     return res.status(200).json({
       data: userGroups,
