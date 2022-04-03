@@ -298,5 +298,9 @@ const calculateUserCurrentMonthExpenses = async (userId) => {
     { $group: { _id: null, amount: { $sum: "$amount" } } },
   ]);
 
-  return currentMonthUserExpenses[0].amount;
+  if (currentMonthUserExpenses.length !== 0) {
+    return currentMonthUserExpenses[0].amount;
+  } else {
+    return 0;
+  }
 };
