@@ -100,6 +100,7 @@ export const fetchRegularShoppingListByUserId = async (req, res) => {
       shoppingListItems.push({
         _id: shoppingList.items[i]._id,
         name: shoppingList.items[i].item.name,
+        imageUrl: shoppingList.items[i].item.imageUrl,
         addedQuantity: shoppingList.items[i].quantity,
         buyedQuantity,
       });
