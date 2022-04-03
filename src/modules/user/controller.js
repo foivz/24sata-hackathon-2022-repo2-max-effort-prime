@@ -1,6 +1,8 @@
 import bcrypt from "bcrypt";
-
+import mongoose from "mongoose";
+const ObjectId = mongoose.Types.ObjectId;
 import User from "./entity.js";
+
 import Expense from "../expense/entity.js";
 import dayjs from "dayjs";
 
@@ -126,6 +128,7 @@ export const fetchDashboardDataByUserId = async (req, res) => {
             $gte: previousMonthBeggining.toDate(),
             $lte: previousMonthEnding.toDate(),
           },
+          user: ObjectId(userId),
         },
       },
       { $group: { _id: null, amount: { $sum: "$amount" } } },
@@ -142,6 +145,7 @@ export const fetchDashboardDataByUserId = async (req, res) => {
               $gte: previousMonthBeggining2.toDate(),
               $lte: previousMonthEnding2.toDate(),
             },
+            user: ObjectId(userId),
           },
         },
         { $group: { _id: null, amount: { $sum: "$amount" } } },
@@ -159,7 +163,7 @@ export const fetchDashboardDataByUserId = async (req, res) => {
               $gte: previousMonthBeggining3.toDate(),
               $lte: previousMonthEnding3.toDate(),
             },
-            user: userId,
+            user: ObjectId(userId),
           },
         },
         { $group: { _id: null, amount: { $sum: "$amount" } } },
@@ -274,6 +278,7 @@ const calculateUserCurrentMonthExpenses = async (userId) => {
           $gte: thisMonthBeginning.toDate(),
           $lte: thisMonthEnding.toDate(),
         },
+        user: ObjectId(userId),
       },
     },
     { $group: { _id: null, amount: { $sum: "$amount" } } },
