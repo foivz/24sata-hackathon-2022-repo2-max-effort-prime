@@ -112,6 +112,13 @@ export const fetchDashboardDataByUserId = async (req, res) => {
   const previousMonthEnding3 = previousMonthBeggining3.endOf("month");
 
   try {
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
+    }
+
     let graphData = await Expense.aggregate([
       {
         $match: {
@@ -152,6 +159,7 @@ export const fetchDashboardDataByUserId = async (req, res) => {
               $gte: previousMonthBeggining3.toDate(),
               $lte: previousMonthEnding3.toDate(),
             },
+            user: userId,
           },
         },
         { $group: { _id: null, amount: { $sum: "$amount" } } },
@@ -166,9 +174,43 @@ export const fetchDashboardDataByUserId = async (req, res) => {
       amount: data.amount,
     }));
 
-    console.log("DATA: ", graphData);
+    graphData = graphData.sort((a, b) =>
+      a.month < b.month ? -1 : a.month === b.month ? 0 : 1
+    );
 
-    return res.status(200).json({ data: users, success: true });
+    const prediction = predictNextThreeMonths([
+      graphData[0].amount,
+      graphData[1].amount,
+      graphData[2].amount,
+    ]);
+
+    graphData.push({
+      month: thisMonthBeginning.add(1, "month").month(),
+      amount: prediction[0],
+    });
+
+    graphData.push({
+      month: thisMonthBeginning.add(2, "month").month(),
+      amount: prediction[1],
+    });
+
+    graphData.push({
+      month: thisMonthBeginning.add(3, "month").month(),
+      amount: prediction[2],
+    });
+
+    const currentMonthExpenses = await calculateUserCurrentMonthExpenses(
+      userId
+    );
+
+    return res.status(200).json({
+      data: {
+        graphData,
+        monthlyBudget: user.monthlyBudget,
+        currentMonthExpenses,
+      },
+      success: true,
+    });
   } catch ({ message }) {
     return res.status(500).json({ message, success: false });
   }
@@ -219,4 +261,23 @@ export const fetchUserById = async (req, res) => {
   } catch ({ message }) {
     return res.status(500).json({ message, success: false });
   }
+};
+
+const calculateUserCurrentMonthExpenses = async (userId) => {
+  const thisMonthBeginning = dayjs().startOf("month");
+  const thisMonthEnding = dayjs().endOf("month");
+
+  const currentMonthUserExpenses = await Expense.aggregate([
+    {
+      $match: {
+        createdAt: {
+          $gte: thisMonthBeginning.toDate(),
+          $lte: thisMonthEnding.toDate(),
+        },
+      },
+    },
+    { $group: { _id: null, amount: { $sum: "$amount" } } },
+  ]);
+
+  return currentMonthUserExpenses[0].amount;
 };
