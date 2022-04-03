@@ -50,11 +50,31 @@ export const fetchGroupsByUserId = async (req, res) => {
   try {
     const groups = await Group.find().populate("members");
 
-    const userGroups = groups.filter((group) => {
-      return group.members
-        .map((member) => member._id.toString())
-        .includes(userId);
-    });
+    let userGroups = [];
+
+    for (let i = 0; i < groups.length; i++) {
+      if (
+        groups[i].members
+          .map((member) => member._id.toString())
+          .includes(userId)
+      ) {
+        const currentGroupExpenses = await calculateGroupCurrentMonthExpenses(
+          groups[i]
+        );
+
+        console.log("TEST: ", currentGroupExpenses);
+
+        userGroups.push({
+          _id: groups[i]._id,
+          name: groups[i].name,
+          members: [...groups[i].members],
+          monthlyBudget: groups[i].monthlyBudget,
+          currentGroupExpenses,
+        });
+      }
+    }
+
+    console.log("USER GROUPS: ", userGroups);
 
     return res.status(200).json({
       data: userGroups,
@@ -177,6 +197,10 @@ export const calculateGroupCurrentMonthExpenses = async (groupId) => {
   const now = new Date();
 
   const groupExpenses = await Expense.findAllByGroupId(groupId);
+
+  if (groupExpenses.length === 0) {
+    return 0;
+  }
 
   return groupExpenses
     .filter(
