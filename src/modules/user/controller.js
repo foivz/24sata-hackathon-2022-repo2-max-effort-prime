@@ -84,3 +84,20 @@ export const fetchAllUsers = async (req, res) => {
     return res.status(500).json({ message, success: false });
   }
 };
+
+export const fetchUserById = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findOne({ _id: userId });
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
+    }
+
+    return res.status(200).json({ data: user, success: true });
+  } catch ({ message }) {
+    return res.status(500).json({ message, success: false });
+  }
+};
